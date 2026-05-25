@@ -202,7 +202,7 @@ const Room = () => {
           <Typography variant="subtitle2" fontWeight={700} color="text.secondary">
             {room?.title || roomCode}
           </Typography>
-          <Chip label={roomCode} size="small" sx={{ bgcolor: "rgba(255,255,255,0.06)", color: "text.secondary", fontSize: "0.7rem", fontFamily: "monospace" }} />
+          <Chip label={roomCode} size="small" sx={{ bgcolor: "rgba(255,255,255,0.06)", color: "text.secondary", fontSize: "0.7rem", fontFamily: "monospace", display: { xs: "none", sm: "flex" } }} />
         </Stack>
 
         {/* Raised hands indicator */}

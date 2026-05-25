@@ -113,7 +113,7 @@ const Login = () => {
         alignItems: "flex-start",
         justifyContent: "center",
         px: 2,
-        pt: 12,
+        pt: { xs: 6, sm: 12 },
         pb: 6,
         transition: "background 0.3s ease",
       }}

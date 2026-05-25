@@ -126,7 +126,7 @@ const Register = () => {
         alignItems: "flex-start",
         justifyContent: "center",
         px: 2,
-        pt: 4,
+        pt: { xs: 2, sm: 4 },
         pb: 6,
         transition: "background 0.3s ease",
       }}

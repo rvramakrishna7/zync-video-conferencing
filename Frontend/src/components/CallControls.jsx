@@ -8,7 +8,12 @@
 
 import { useState } from "react";
 import {
-  Box, IconButton, Tooltip, Button, Badge, Divider,
+  Box,
+  IconButton,
+  Tooltip,
+  Button,
+  Badge,
+  Divider,
 } from "@mui/material";
 import MicIcon from "@mui/icons-material/Mic";
 import MicOffIcon from "@mui/icons-material/MicOff";
@@ -29,16 +34,20 @@ const ControlBtn = ({ title, onClick, active, color, children, size = 48 }) => (
     <IconButton
       onClick={onClick}
       sx={{
-        width: size,
-        height: size,
+        width: { xs: 38, sm: size },
+        height: { xs: 38, sm: size },
         borderRadius: 3,
-        bgcolor: active ? `${color || "primary"}.main` : "rgba(255,255,255,0.08)",
+        bgcolor: active
+          ? `${color || "primary"}.main`
+          : "rgba(255,255,255,0.08)",
         color: active ? "#fff" : "text.secondary",
         border: "1px solid",
         borderColor: active ? "transparent" : "rgba(255,255,255,0.1)",
         transition: "all 0.2s",
         "&:hover": {
-          bgcolor: active ? `${color || "primary"}.dark` : "rgba(255,255,255,0.15)",
+          bgcolor: active
+            ? `${color || "primary"}.dark`
+            : "rgba(255,255,255,0.15)",
           transform: "translateY(-2px)",
         },
       }}
@@ -49,12 +58,22 @@ const ControlBtn = ({ title, onClick, active, color, children, size = 48 }) => (
 );
 
 const CallControls = ({
-  isMuted, isCamOff, isScreenSharing,
-  toggleMic, toggleCam, toggleScreenShare,
-  socket, roomCode, userName,
-  isHandRaised, onRaiseHand,
-  onToggleChat, chatOpen, unreadCount,
-  onEndCall, isHost,
+  isMuted,
+  isCamOff,
+  isScreenSharing,
+  toggleMic,
+  toggleCam,
+  toggleScreenShare,
+  socket,
+  roomCode,
+  userName,
+  isHandRaised,
+  onRaiseHand,
+  onToggleChat,
+  chatOpen,
+  unreadCount,
+  onEndCall,
+  isHost,
 }) => {
   const [showReactions, setShowReactions] = useState(false);
 
@@ -70,9 +89,10 @@ const CallControls = ({
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        gap: 1.5,
-        py: 2,
-        px: 3,
+        gap: { xs: 0.5, sm: 1.5 },
+        py: { xs: 1.5, sm: 2 },
+        px: { xs: 1, sm: 3 },
+        flexWrap: "wrap",
         background: "rgba(10,10,15,0.95)",
         borderTop: "1px solid rgba(255,255,255,0.07)",
       }}
@@ -98,8 +118,15 @@ const CallControls = ({
             <IconButton
               key={emoji}
               onClick={() => sendReaction(emoji)}
-              sx={{ fontSize: "1.4rem", width: 40, height: 40, borderRadius: 2,
-                "&:hover": { bgcolor: "rgba(255,255,255,0.08)", transform: "scale(1.2)" },
+              sx={{
+                fontSize: "1.4rem",
+                width: 40,
+                height: 40,
+                borderRadius: 2,
+                "&:hover": {
+                  bgcolor: "rgba(255,255,255,0.08)",
+                  transform: "scale(1.2)",
+                },
                 transition: "transform 0.15s",
               }}
             >
@@ -139,7 +166,15 @@ const CallControls = ({
         {isScreenSharing ? <StopScreenShareIcon /> : <ScreenShareIcon />}
       </ControlBtn>
 
-      <Divider orientation="vertical" flexItem sx={{ borderColor: "rgba(255,255,255,0.1)", mx: 0.5 }} />
+      <Divider
+        orientation="vertical"
+        flexItem
+        sx={{
+          borderColor: "rgba(255,255,255,0.1)",
+          mx: 0.5,
+          display: { xs: "none", sm: "block" },
+        }}
+      />
 
       {/* Raise hand */}
       <ControlBtn
@@ -166,21 +201,37 @@ const CallControls = ({
         <IconButton
           onClick={onToggleChat}
           sx={{
-            width: 48, height: 48, borderRadius: 3,
+            width: 48,
+            height: 48,
+            borderRadius: 3,
             bgcolor: chatOpen ? "primary.main" : "rgba(255,255,255,0.08)",
             color: chatOpen ? "#fff" : "text.secondary",
             border: "1px solid",
             borderColor: chatOpen ? "transparent" : "rgba(255,255,255,0.1)",
-            "&:hover": { bgcolor: chatOpen ? "primary.dark" : "rgba(255,255,255,0.15)" },
+            "&:hover": {
+              bgcolor: chatOpen ? "primary.dark" : "rgba(255,255,255,0.15)",
+            },
           }}
         >
-          <Badge badgeContent={chatOpen ? 0 : unreadCount} color="error" max={9}>
+          <Badge
+            badgeContent={chatOpen ? 0 : unreadCount}
+            color="error"
+            max={9}
+          >
             <ChatIcon />
           </Badge>
         </IconButton>
       </Tooltip>
 
-      <Divider orientation="vertical" flexItem sx={{ borderColor: "rgba(255,255,255,0.1)", mx: 0.5 }} />
+      <Divider
+        orientation="vertical"
+        flexItem
+        sx={{
+          borderColor: "rgba(255,255,255,0.1)",
+          mx: 0.5,
+          display: { xs: "none", sm: "block" },
+        }}
+      />
 
       {/* End call */}
       <Button
@@ -193,11 +244,16 @@ const CallControls = ({
           background: "none",
           backgroundColor: "#EF4444",
           boxShadow: "0 4px 15px rgba(239,68,68,0.4)",
-          px: 2.5, py: 1.2, borderRadius: 3,
+          px: { xs: 1.5, sm: 2.5 },
+          py: 1.2,
+          borderRadius: 3,
           fontSize: "0.875rem",
+          minWidth: { xs: "auto", sm: "unset" },
         }}
       >
-        {isHost ? "End for all" : "Leave"}
+        <Box sx={{ display: { xs: "none", sm: "block" } }}>
+          {isHost ? "End for all" : "Leave"}
+        </Box>
       </Button>
     </Box>
   );

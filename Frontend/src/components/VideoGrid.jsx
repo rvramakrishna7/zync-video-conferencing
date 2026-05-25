@@ -18,10 +18,10 @@ import VideoTile from "./VideoTile";
  * MUI Grid uses a 12-column system — xs={6} means "take 6 of 12 columns = 50% width"
  */
 const getGridCols = (count) => {
-  if (count === 1) return 12;   // 100% width
-  if (count === 2) return 6;    // 50% each
-  if (count <= 4) return 6;     // 2x2
-  return 4;                     // 33% — 3 columns for 5+
+  if (count === 1) return 12;
+  if (count === 2) return { xs: 12, sm: 6 };    // mobile: stacked, desktop: side by side
+  if (count <= 4) return { xs: 12, sm: 6 };     // mobile: stacked, desktop: 2x2
+  return { xs: 12, sm: 6, md: 4 };              // mobile: stacked, desktop: 3 col
 };
 
 const VideoGrid = ({ localStream, peers, isMuted, isCamOff, localUser }) => {

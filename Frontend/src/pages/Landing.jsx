@@ -220,7 +220,8 @@ const Landing = () => {
           </IconButton>
           {isAuthenticated ? (
             <>
-              <Typography variant="body2" color="text.secondary">
+              <Typography variant="body2" color="text.secondary"
+                sx={{ display: { xs: "none", sm: "block" } }}>
                 Hey, {user?.name?.split(" ")[0]} 👋
               </Typography>
               <Button
@@ -311,8 +312,8 @@ const Landing = () => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            flexWrap: "nowrap", // forces everything onto one line
-            whiteSpace: "nowrap", // prevents the typed text from wrapping
+            flexWrap: { xs: "wrap", sm: "nowrap" }, // forces everything onto one line
+            whiteSpace: { xs: "normal", sm: "nowrap" }, // prevents the typed text from wrapping
           }}
         >
           Video calls that
@@ -398,7 +399,12 @@ const Landing = () => {
             </Alert>
           )}
           {/* Single row — Start meeting | or | code input + Join */}
-          <Stack direction="row" spacing={1.5} sx={{ alignItems: "center" }}>
+          {/* Desktop: single row. Mobile: stacked */}
+          <Stack
+            direction={{ xs: "column", sm: "row" }}
+            spacing={1.5}
+            sx={{ alignItems: { xs: "stretch", sm: "center" } }}
+          >
             {/* Start a meeting button */}
             <Button
               variant="contained"
@@ -411,7 +417,12 @@ const Landing = () => {
               }
               onClick={handleCreateRoom}
               disabled={creating}
-              sx={{ height: 44, px: 2.5, whiteSpace: "nowrap", flexShrink: 0 }}
+              sx={{
+                height: 44,
+                px: 2.5,
+                whiteSpace: "nowrap",
+                flexShrink: 0,
+              }}
             >
               {creating ? "Creating..." : "Start a meeting"}
             </Button>
@@ -420,7 +431,11 @@ const Landing = () => {
             <Typography
               variant="caption"
               color="text.secondary"
-              sx={{ flexShrink: 0, px: 0.5 }}
+              sx={{
+                flexShrink: 0,
+                px: 0.5,
+                textAlign: { xs: "center", sm: "left" },
+              }}
             >
               or
             </Typography>
@@ -436,9 +451,7 @@ const Landing = () => {
               inputProps={{
                 style: { letterSpacing: "0.06em", fontWeight: 500 },
               }}
-              sx={{
-                "& .MuiOutlinedInput-root": { height: 44 },
-              }}
+              sx={{ "& .MuiOutlinedInput-root": { height: 44 } }}
             />
 
             {/* Join button */}
@@ -460,7 +473,7 @@ const Landing = () => {
             >
               Join
             </Button>
-          </Stack>{" "}
+          </Stack>
         </Box>
 
         {/* ── Feature Pills ──────────────────────────────────────────────── */}
