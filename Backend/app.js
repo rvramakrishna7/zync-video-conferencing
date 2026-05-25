@@ -59,8 +59,26 @@ const io = initSocket(httpServer);
  */
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
-    credentials: true, // allows cookies/auth headers to be sent cross-origin
+    origin: (origin, callback) => {
+      // Allow requests with no origin (mobile apps, curl, Postman)
+      if (!origin) return callback(null, true);
+
+      const allowedOrigins = [
+        process.env.CLIENT_URL,
+        "http://localhost:5173",
+        "https://zync-video-conferencing.vercel.app",
+      ].filter(Boolean);
+
+      // Also allow any Vercel preview deployment URLs for this project
+      const isVercelPreview = origin.includes("rvramakrishna7s-projects.vercel.app");
+
+      if (allowedOrigins.includes(origin) || isVercelPreview) {
+        callback(null, true);
+      } else {
+        callback(new Error(`CORS blocked: ${origin}`));
+      }
+    },
+    credentials: true,
   })
 );
 
