@@ -23,7 +23,9 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Box, Typography, CircularProgress, Snackbar, Alert, Stack, Avatar, Chip } from "@mui/material";
+import { Box, Typography, CircularProgress, Snackbar, Alert, Stack, Avatar, Chip, IconButton, Tooltip } from "@mui/material";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import IosShareIcon from "@mui/icons-material/IosShare";
 import PanToolIcon from "@mui/icons-material/PanTool";
 
 import { useAuth } from "../context/AuthContext";
@@ -167,6 +169,35 @@ const Room = () => {
     return Math.floor((Date.now() - startTimeRef.current) / 1000);
   };
 
+  // ── Invite / Share link ────────────────────────────────────────────────────
+
+  const handleInvite = async () => {
+    // The full joinable URL — anyone who opens this lands directly in the room
+    const joinLink = `${window.location.origin}/room/${roomCode}`;
+
+    /**
+     * Web Share API — on mobile this opens the native share sheet
+     * (WhatsApp, SMS, Gmail, copy link, etc.)
+     * navigator.share is only available on mobile browsers and some desktop browsers.
+     * We check for it first and fall back to clipboard copy on desktop.
+     */
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `Join ${room?.title || "Zync Meeting"}`,
+          text: `Join my Zync meeting — ${room?.title || roomCode}`,
+          url: joinLink,
+        });
+      } catch {
+        // User cancelled the share sheet — not an error
+      }
+    } else {
+      // Desktop fallback — copy to clipboard
+      await navigator.clipboard.writeText(joinLink);
+      showToast("📋 Link copied! Share it to invite others.", "success");
+    }
+  };
+
   // ── Loading / error states ─────────────────────────────────────────────────
 
   if (loading) {
@@ -215,9 +246,39 @@ const Room = () => {
           </Stack>
         )}
 
-        <Typography variant="caption" color="text.secondary">
-          {1 + peers.size} participant{1 + peers.size !== 1 ? "s" : ""}
-        </Typography>
+        <Stack direction="row" sx={{ alignItems: "center" }} spacing={1}>
+          <Typography variant="caption" color="text.secondary">
+            {1 + peers.size} participant{1 + peers.size !== 1 ? "s" : ""}
+          </Typography>
+
+          {/* Invite button — native share sheet on mobile, clipboard on desktop */}
+          <Tooltip title="Invite people" placement="bottom">
+            <IconButton
+              onClick={handleInvite}
+              size="small"
+              sx={{
+                color: "primary.main",
+                bgcolor: "rgba(13,148,136,0.1)",
+                border: "1px solid rgba(13,148,136,0.3)",
+                borderRadius: 2,
+                px: 1.5,
+                py: 0.5,
+                gap: 0.5,
+                "&:hover": { bgcolor: "rgba(13,148,136,0.2)" },
+                // Show share icon on mobile, copy icon on desktop
+                // Both are always rendered — CSS controls which shows
+              }}
+            >
+              {/* Share icon — shown on mobile via Web Share API */}
+              <IosShareIcon sx={{ fontSize: 16, display: { xs: "block", sm: "none" } }} />
+              {/* Copy icon — shown on desktop */}
+              <ContentCopyIcon sx={{ fontSize: 16, display: { xs: "none", sm: "block" } }} />
+              <Typography variant="caption" fontWeight={600} sx={{ fontSize: "0.75rem" }}>
+                Invite
+              </Typography>
+            </IconButton>
+          </Tooltip>
+        </Stack>
       </Box>
 
       {/* ── Main area: Video + Chat ──────────────────────────────────────── */}
