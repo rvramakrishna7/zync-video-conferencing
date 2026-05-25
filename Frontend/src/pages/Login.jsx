@@ -63,7 +63,9 @@ const Login = () => {
         });
 
         login(data.token, data.user);
-        navigate("/");
+        // Same redirect logic — go back to where they came from
+        const redirect = searchParams.get("redirect");
+        navigate(redirect ? decodeURIComponent(redirect) : "/");
       } catch (err) {
         setError("Google sign-in failed. Please try again.");
       } finally {
@@ -91,9 +93,10 @@ const Login = () => {
       const { data } = await authAPI.login(form);
       login(data.token, data.user); // store token + update global auth state
 
-      // Redirect: if they came from /login?redirect=create, go create a room
+      // redirect param contains the original URL they were trying to visit
+      // e.g. /login?redirect=%2Froom%2FABC123 → decode → /room/ABC123
       const redirect = searchParams.get("redirect");
-      navigate(redirect === "create" ? "/" : "/");
+      navigate(redirect ? decodeURIComponent(redirect) : "/");
     } catch (err) {
       setError(err.response?.data?.message || "Login failed. Please try again.");
     } finally {

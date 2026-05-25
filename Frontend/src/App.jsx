@@ -47,9 +47,14 @@ const ProtectedRoute = ({ children }) => {
     );
   }
 
-  // <Navigate> is React Router's redirect component
-  // replace={true} replaces history entry so back button doesn't loop
-  return isAuthenticated ? children : <Navigate to="/login" replace />;
+ // Pass the current URL as ?redirect= so Login knows where to send them after
+  // window.location.pathname gives us "/room/ABC123" which we encode as a query param
+  return isAuthenticated ? children : (
+    <Navigate
+      to={`/login?redirect=${encodeURIComponent(window.location.pathname)}`}
+      replace
+    />
+  );
 };
 
 const App = () => {
