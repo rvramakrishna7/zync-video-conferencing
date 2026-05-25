@@ -477,13 +477,12 @@ const Landing = () => {
         </Box>
 
         {/* ── Feature Pills ──────────────────────────────────────────────── */}
-        {/* ── Feature Pills ──────────────────────────────────────────────── */}
+        {/* On mobile: vertical stack. On desktop: horizontal row with dividers */}
         <Stack
-          direction="row"
+          direction={{ xs: "column", md: "row" }}
           justifyContent="center"
           alignItems="center"
-          flexWrap="wrap"
-          sx={{ mt: 5, gap: { xs: 2, md: 0 } }}
+          sx={{ mt: 5 }}
         >
           {[
             { icon: <GroupsIcon sx={{ fontSize: 18, color: "primary.main" }} />, label: "Up to 50 participants" },
@@ -491,30 +490,29 @@ const Landing = () => {
             { icon: <BoltIcon sx={{ fontSize: 18, color: "primary.main" }} />, label: "Instant join via link" },
           ].map(({ icon, label }, index, arr) => (
             <Box key={label} sx={{ display: "flex", alignItems: "center" }}>
-              {/* Feature item */}
               <Stack
                 direction="row"
                 alignItems="center"
                 spacing={1}
-                sx={{ px: { xs: 2, md: 4 }, py: 1 }}
+                sx={{ px: { xs: 1, md: 4 }, py: { xs: 0.75, md: 1 } }}
               >
                 {icon}
                 <Typography
                   variant="body2"
-                  sx={{ color: "text.secondary", fontWeight: 500, whiteSpace: "nowrap" }}
+                  sx={{ color: "text.secondary", fontWeight: 500 }}
                 >
                   {label}
                 </Typography>
               </Stack>
 
-              {/* Vertical divider between items — not after the last one */}
+              {/* Vertical divider — only between items on desktop */}
               {index < arr.length - 1 && (
                 <Box
                   sx={{
                     width: "1px",
                     height: 20,
                     bgcolor: "divider",
-                    display: { xs: "none", md: "block" }, // hide on mobile
+                    display: { xs: "none", md: "block" },
                   }}
                 />
               )}

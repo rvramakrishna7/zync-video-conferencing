@@ -92,7 +92,8 @@ const CallControls = ({
         gap: { xs: 0.5, sm: 1.5 },
         py: { xs: 1.5, sm: 2 },
         px: { xs: 1, sm: 3 },
-        flexWrap: "wrap",
+        flexWrap: "nowrap",
+        overflowX: "auto",
         background: "rgba(10,10,15,0.95)",
         borderTop: "1px solid rgba(255,255,255,0.07)",
       }}
@@ -201,8 +202,8 @@ const CallControls = ({
         <IconButton
           onClick={onToggleChat}
           sx={{
-            width: 48,
-            height: 48,
+            width: { xs: 38, sm: 48 },
+            height: { xs: 38, sm: 48 },
             borderRadius: 3,
             bgcolor: chatOpen ? "primary.main" : "rgba(255,255,255,0.08)",
             color: chatOpen ? "#fff" : "text.secondary",
@@ -233,27 +234,46 @@ const CallControls = ({
         }}
       />
 
-      {/* End call */}
+      {/* End call — IconButton on mobile, full Button on desktop */}
+      <Box sx={{ display: { xs: "flex", sm: "none" } }}>
+        <Tooltip title={isHost ? "End for all" : "Leave"} placement="top">
+          <IconButton
+            onClick={onEndCall}
+            sx={{
+              width: 38,
+              height: 38,
+              borderRadius: 3,
+              bgcolor: "#EF4444",
+              color: "#fff",
+              boxShadow: "0 4px 15px rgba(239,68,68,0.4)",
+              "&:hover": { bgcolor: "#DC2626" },
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <CallEndIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
+      </Box>
       <Button
         variant="contained"
         onClick={onEndCall}
         startIcon={<CallEndIcon />}
         sx={{
+          display: { xs: "none", sm: "flex" },
           bgcolor: "#EF4444",
           "&:hover": { bgcolor: "#DC2626" },
           background: "none",
           backgroundColor: "#EF4444",
           boxShadow: "0 4px 15px rgba(239,68,68,0.4)",
-          px: { xs: 1.5, sm: 2.5 },
+          px: 2.5,
           py: 1.2,
           borderRadius: 3,
           fontSize: "0.875rem",
-          minWidth: { xs: "auto", sm: "unset" },
         }}
       >
-        <Box sx={{ display: { xs: "none", sm: "block" } }}>
-          {isHost ? "End for all" : "Leave"}
-        </Box>
+        {isHost ? "End for all" : "Leave"}
       </Button>
     </Box>
   );
