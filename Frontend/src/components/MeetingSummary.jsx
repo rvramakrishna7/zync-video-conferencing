@@ -155,7 +155,7 @@ const MeetingSummary = ({ open, roomCode, chatLog, duration, onClose }) => {
           >
             <CircularProgress sx={{ color: "primary.main" }} />
             <Typography variant="body2" color="text.secondary">
-              Gemini is summarizing your meeting...
+              Groq is summarizing your meeting...
             </Typography>
           </Box>
         ) : error ? (
