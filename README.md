@@ -3,7 +3,7 @@
 A full-stack video conferencing application built with WebRTC, Socket.IO, and AI-powered meeting summaries.
 
 ## 🚀 Live Demo
-- Frontend: [your-vercel-link]
+- Frontend: https://zync-video-conferencing.vercel.app/
 - Backend: [your-railway-link]
 
 ## ✨ Features

@@ -114,7 +114,7 @@ const PORT = process.env.PORT || 5000;
 
 const start = async () => {
   await connectDB(); // Wait for DB connection before accepting any traffic
-  httpServer.listen(PORT, () => {
+  httpServer.listen(PORT,"0.0.0.0", () => {
     console.log(`🚀 Zync server running on http://localhost:${PORT}`);
   });
 };
