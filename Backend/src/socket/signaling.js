@@ -41,7 +41,7 @@
 import { Server } from "socket.io";
 
 // Tracks which users are in which room: { roomId: [{ socketId, userId, name }] }
-// In production you'd use Redis for this (so it works across multiple server instances)
+
 const roomParticipants = {};
 
 export const initSocket = (httpServer) => {

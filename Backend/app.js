@@ -11,15 +11,15 @@
  *   6. Starting to listen for requests
  */
 
-import "dotenv/config"; // Loads .env variables into process.env — must be FIRST
+import "dotenv/config";               // Loads .env variables into process.env — must be FIRST
 import express from "express";
-import { createServer } from "http"; // Node's built-in HTTP module
+import { createServer } from "http";  // Node's built-in HTTP module
 import cors from "cors";
 
 import connectDB from "./src/config/db.js";
 import { initSocket } from "./src/socket/signaling.js";
 
-// --- Route imports (we'll fill these in as we build each feature) ---
+// --- Route imports 
 import authRoutes from "./src/routes/auth.routes.js";
 import roomRoutes from "./src/routes/room.routes.js";
 import userRoutes from "./src/routes/user.routes.js";
