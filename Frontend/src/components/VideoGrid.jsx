@@ -1,13 +1,5 @@
 /**
  * components/VideoGrid.jsx — Lays out all video tiles in a responsive grid.
- *
- * The grid layout changes based on participant count — same as Zoom/Meet:
- *   1 person  → full width single tile
- *   2 people  → side by side
- *   3–4       → 2x2 grid
- *   5+        → 3-column grid
- *
- * MUI's Grid2 component handles this via the xs/sm/md breakpoint props.
  */
 
 import { Box, Grid } from "@mui/material";

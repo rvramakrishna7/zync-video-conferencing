@@ -1,24 +1,5 @@
 /**
  * pages/Room.jsx — The video call page. Orchestrates all sub-components.
- *
- * This page is the "conductor" — it doesn't hold much logic itself.
- * It delegates to:
- *   useWebRTC   → peer connection management
- *   VideoGrid   → renders all video tiles
- *   CallControls→ buttons at the bottom
- *   ChatSidebar → collapsible right panel
- *   EmojiReactions → floating emoji overlay
- *   MeetingSummary → end-of-call AI modal
- *
- * Layout:
- *   ┌─────────────────────────────┬───────────┐
- *   │                             │           │
- *   │        VideoGrid            │  Chat     │
- *   │                             │  Sidebar  │
- *   │                             │ (toggles) │
- *   ├─────────────────────────────┴───────────┤
- *   │              CallControls               │
- *   └─────────────────────────────────────────┘
  */
 
 import { useState, useEffect, useRef } from "react";
@@ -93,8 +74,6 @@ const Room = () => {
     if (!socket) return;
 
     // Track chat messages for AI summary (separate from what ChatSidebar renders)
-    // Uses chatOpenRef.current instead of chatOpen state — so this listener
-    // is registered ONCE and never removed/re-added when chat toggles
     socket.on("receive-message", ({ message, sender, timestamp }) => {
       chatLogRef.current.push(`${sender}: ${message}`);
       if (!chatOpenRef.current) setUnreadCount((c) => c + 1);
@@ -109,7 +88,6 @@ const Room = () => {
     });
 
     socket.on("hand-lowered", ({ userId }) => {
-      // Remove from raised hands (simplified — in production match by userId)
       setRaisedHands((prev) => prev.slice(1));
     });
 
@@ -120,12 +98,10 @@ const Room = () => {
     };
   }, [socket]);
 
-  // ── Chat open clears unread count ──────────────────────────────────────────
-
-  // ── Chat open clears unread count + keeps ref in sync ─────────────────────
+  // ── Chat open clears unread count , Chat open clears unread count + keeps ref in sync ──
 
   useEffect(() => {
-    chatOpenRef.current = chatOpen; // keep ref updated so socket listener reads latest value
+    chatOpenRef.current = chatOpen; //ref updated so socket listener reads latest value
     if (chatOpen) setUnreadCount(0);
   }, [chatOpen]);
 
@@ -176,10 +152,7 @@ const Room = () => {
     const joinLink = `${window.location.origin}/room/${roomCode}`;
 
     /**
-     * Web Share API — on mobile this opens the native share sheet
-     * (WhatsApp, SMS, Gmail, copy link, etc.)
-     * navigator.share is only available on mobile browsers and some desktop browsers.
-     * We check for it first and fall back to clipboard copy on desktop.
+     * Web Share API 
      */
     if (navigator.share) {
       try {
@@ -189,10 +162,9 @@ const Room = () => {
           url: joinLink,
         });
       } catch {
-        // User cancelled the share sheet — not an error
       }
     } else {
-      // Desktop fallback — copy to clipboard
+      // Desktop fallback 
       await navigator.clipboard.writeText(joinLink);
       showToast("📋 Link copied! Share it to invite others.", "success");
     }
@@ -266,7 +238,7 @@ const Room = () => {
                 gap: 0.5,
                 "&:hover": { bgcolor: "rgba(13,148,136,0.2)" },
                 // Show share icon on mobile, copy icon on desktop
-                // Both are always rendered — CSS controls which shows
+               
               }}
             >
               {/* Share icon — shown on mobile via Web Share API */}
@@ -294,7 +266,6 @@ const Room = () => {
         />
 
         {/* Chat sidebar — always mounted so socket listener never misses messages */}
-        {/* hidden prop hides it visually without unmounting */}
         <ChatSidebar
           socket={socket}
           roomCode={roomCode}

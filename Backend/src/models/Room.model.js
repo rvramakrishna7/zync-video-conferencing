@@ -12,10 +12,6 @@ import { customAlphabet } from "nanoid"; // compact, URL-friendly unique IDs
  * nanoid generates short unique IDs like "K3fN2mP"
  * We use a custom alphabet (no ambiguous chars like 0/O, 1/l/I)
  * Length 10 = 62^10 possible IDs = practically zero collision chance
- *
- * WHY not MongoDB's ObjectId?
- * ObjectIds look like "507f1f77bcf86cd799439011" — ugly in a shareable URL.
- * "zync.app/room/K3fN2mP" is way better.
  */
 const generateRoomCode = customAlphabet(
   "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789",
@@ -88,7 +84,6 @@ const roomSchema = new mongoose.Schema(
     },
 
     // Chat transcript stored on the room for AI summarization
-    // We'll also have a separate Message model for real-time queries
     chatLog: [
       {
         sender: String,

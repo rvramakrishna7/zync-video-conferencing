@@ -1,11 +1,5 @@
 /**
  * components/ChatSidebar.jsx — Real-time chat panel.
- *
- * Listens to socket "receive-message" events and renders messages.
- * Auto-scrolls to the newest message using a ref on the bottom div.
- *
- * Messages are stored locally in state — for a production app you'd
- * also load message history from the DB on mount.
  */
 
 import { useState, useEffect, useRef } from "react";
@@ -71,7 +65,7 @@ const ChatSidebar = ({ socket, roomCode, user, onClose, hidden  }) => {
     // Shift+Enter = newline (default textarea behavior, no need to handle)
   };
 
-  // Format timestamp: "2:34 PM"
+  // Format timestamp: 
   const formatTime = (iso) => {
     return new Date(iso).toLocaleTimeString([], {
       hour: "2-digit",

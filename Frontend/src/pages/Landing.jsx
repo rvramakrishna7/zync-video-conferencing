@@ -1,19 +1,5 @@
 /**
  * pages/Landing.jsx — The home page.
- *
- * What happens here:
- *  1. User sees the Zync brand + tagline
- *  2. They can either: Create a new room OR enter a room code to join
- *  3. If they're already logged in, "Create Room" hits the API directly
- *  4. If not logged in, we redirect them to login first
- *
- * MUI components used:
- *  Box       → generic div with sx prop styling
- *  Container → centers content with max-width
- *  Typography → all text (replaces h1, p, span)
- *  Button    → styled buttons
- *  TextField → the room code input
- *  Stack     → flexbox layout helper (replaces most flex divs)
  */
 
 import { useState, useEffect } from "react";
@@ -74,9 +60,6 @@ const Landing = () => {
   useEffect(() => {
     const current = PHRASES[phraseIndex];
 
-    // When the full phrase is typed and we're not yet deleting,
-    // we pause 1.8s BEFORE starting to delete.
-    // We handle this by using a longer timeout delay instead of
     // a nested setTimeout — so cleanup always works correctly.
     const isFullyTyped = !isDeleting && displayed === current;
     const isFullyDeleted = isDeleting && displayed === "";

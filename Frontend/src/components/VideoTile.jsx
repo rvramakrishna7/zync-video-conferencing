@@ -1,10 +1,5 @@
 /**
  * components/VideoTile.jsx — Renders one participant's video.
- *
- * Key concept: srcObject
- * HTML <video src="..."> plays from a URL.
- * For WebRTC we have a live MediaStream object — no URL exists.
- * We must set video.srcObject via a ref. Can't do this in JSX.
  */
 
 import { useEffect, useRef } from "react";
@@ -42,8 +37,8 @@ const VideoTile = ({ stream, name, isMuted = false, isLocal = false, isCamOff = 
       <video
         ref={videoRef}
         autoPlay
-        playsInline  // required on iOS to stay inline instead of going fullscreen
-        muted={isLocal} // always mute your own video to prevent echo feedback
+        playsInline  
+        muted={isLocal} 
         style={{
           position: "absolute",
           inset: 0,

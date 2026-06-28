@@ -1,15 +1,5 @@
 /**
  * Message.model.js — Chat messages sent during a meeting.
- *
- * WHY a separate Message collection if Room already has chatLog?
- *
- * chatLog on Room = lightweight array used for AI summary (appended at end)
- * Message collection = real-time queryable, paginated, indexed chat history
- *
- * In a real app you'd query messages with pagination:
- *   GET /api/rooms/:roomId/messages?page=2&limit=50
- * That's hard to do efficiently on an embedded array.
- * A separate collection with an index on roomId is much faster.
  */
 
 import mongoose from "mongoose";

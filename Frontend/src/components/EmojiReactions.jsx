@@ -1,11 +1,5 @@
 /**
  * components/EmojiReactions.jsx — Floating emoji animations on screen.
- *
- * When someone sends a reaction, it floats up from the bottom and fades out.
- * This is a purely visual component — listens to socket, renders CSS animations.
- *
- * Each reaction gets a random x position so multiple reactions don't stack.
- * After 3 seconds the animation is done and we remove it from state.
  */
 
 import { useEffect, useState } from "react";

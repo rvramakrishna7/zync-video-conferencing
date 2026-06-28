@@ -1,9 +1,6 @@
 /**
  * components/CallControls.jsx — Bottom control bar.
  * Mic, Camera, Screen Share, Raise Hand, Reactions, End Call.
- *
- * Each button emits a socket event OR toggles local state.
- * The "End Call" button is only shown to the host.
  */
 
 import { useState } from "react";

@@ -1,8 +1,5 @@
 /**
  * pages/Register.jsx — New user sign up.
- *
- * Same pattern as Login — controlled form, API call, store token.
- * Extra field: name. Extra validation: password confirmation.
  */
 
 import { useState } from "react";

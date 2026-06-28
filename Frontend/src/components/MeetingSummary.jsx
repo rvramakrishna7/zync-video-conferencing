@@ -1,12 +1,8 @@
 /**
  * components/MeetingSummary.jsx — AI-generated summary shown when call ends.
- *
- * When the host ends the call:
  *   1. We collect the chat transcript from local state
- *   2. Send it to our backend which calls the Claude API
+ *   2. Send it to our backend which calls the Groq API
  *   3. Display the returned summary in this modal
- *
- * The modal uses MUI Dialog — a full-screen overlay component.
  */
 
 import { useState, useEffect } from "react";
@@ -36,7 +32,6 @@ const MeetingSummary = ({ open, roomCode, chatLog, duration, onClose }) => {
 
   /**
    * When the dialog opens, request the AI summary.
-   * We only do this once (when open flips from false to true).
    */
   useEffect(() => {
     if (!open || summary) return;

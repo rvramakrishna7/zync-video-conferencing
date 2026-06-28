@@ -1,26 +1,5 @@
 /**
  * hooks/useWebRTC.js — Manages all WebRTC peer connections.
- *
- * WHY a custom hook for this?
- * WebRTC logic is complex and stateful. Putting it in a hook keeps
- * Room.jsx clean. The hook handles ALL peer connection complexity
- * and returns only what the UI needs:
- *   { localStream, peers, isMuted, isCamOff, toggleMic, toggleCam }
- *
- * ─── Key WebRTC Concepts ──────────────────────────────────────────────────
- *
- * RTCPeerConnection — one instance per remote participant.
- *   Manages the direct connection, streams, ICE negotiation.
- *
- * MediaStream — your camera/mic output from getUserMedia().
- *
- * Offer/Answer — SDP text describing media capabilities.
- *   Caller creates offer → Callee creates answer → both agree on format.
- *
- * ICE Candidates — possible network paths browsers discover and share
- *   via signaling until the best direct path is found.
- *
- * STUN server — tells your browser its public IP for NAT traversal.
  */
 
 import { useEffect, useRef, useState, useCallback } from "react";
@@ -245,14 +224,14 @@ const useWebRTC = (socket, roomCode, user) => {
         name: user.name,
       });
 
-      // People already in the room — we call each of them
+      // People already in the room 
       socket.on("room-participants", (participants) => {
         participants.forEach(({ socketId, name }) => {
           if (socketId !== socket.id) callPeer(socketId, name);
         });
       });
 
-      // New person joined after us — they'll call us; just register their presence
+      // New person joined after us 
       socket.on("user-joined", ({ socketId, name }) => {
         setPeers((prev) => {
           const updated = new Map(prev);

@@ -1,8 +1,5 @@
 /**
  * auth.routes.js — Maps HTTP endpoints to controller functions.
- *
- * Routes are intentionally kept thin — no logic here, just mapping.
- * All logic lives in controllers.
  */
 
 import { Router } from "express";

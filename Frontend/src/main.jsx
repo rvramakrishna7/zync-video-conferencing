@@ -1,13 +1,5 @@
 /**
- * main.jsx — The very first file React loads.
- *
- * Mounts the React app into the real DOM's <div id="root"> in index.html.
- *
- * Everything is wrapped in providers so their values are available
- * to every component in the tree. Order matters:
- *   ThemeProvider  → wraps everything (MUI needs the theme)
- *   AuthProvider   → wraps SocketProvider (socket may need auth state)
- *   SocketProvider → wraps App (all pages/components can access socket)
+ * main.jsx 
  */
 
 import React from "react";

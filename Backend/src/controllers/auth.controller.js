@@ -1,24 +1,6 @@
 /**
  * auth.controller.js — Handles Register, Login, Google OAuth, and token refresh.
- *
- * ─── Controller Pattern ───────────────────────────────────────────────────────
- *
- * Route file  → WHAT URL triggers this (e.g. POST /api/auth/login)
- * Controller  → WHAT HAPPENS when that URL is hit (the business logic)
- * Model       → HOW data is stored/retrieved
- *
- * Keeping these three separate = easier to test and maintain.
- *
- * ─── What is a JWT? ───────────────────────────────────────────────────────────
- *
- * JSON Web Token — a self-contained token the server signs and sends to the client.
- * The client stores it and sends it back with every protected request.
- *
- * Structure: header.payload.signature
- * Example:   eyJhbGciOi.eyJ1c2VySWQiOi.SflKxwRJSMeK...
- *
- * The server doesn't store sessions — it just verifies the signature.
- * That's why JWT is "stateless" — scales without shared session storage.
+ 
  */
 
 import jwt from "jsonwebtoken";
@@ -26,13 +8,6 @@ import User from "../models/User.model.js";
 
 // ─── Helper: Generate JWT ─────────────────────────────────────────────────────
 
-/**
- * Creates a signed JWT containing the user's ID.
- * We sign with our JWT_SECRET — only our server can verify it's genuine.
- *
- * payload: { id: "mongoId" } — what we embed in the token
- * expiresIn: token becomes invalid after this duration (from .env)
- */
 const generateToken = (userId) => {
   return jwt.sign({ id: userId }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN || "7d",
@@ -43,14 +18,12 @@ const generateToken = (userId) => {
 
 /**
  * Reusable function to send user data + token.
- * We exclude the password from the response (select: false handles most cases,
- * but .toObject() + delete is belt-and-suspenders).
  */
 const sendTokenResponse = (user, statusCode, res) => {
   const token = generateToken(user._id);
 
   const userData = user.toObject();
-  delete userData.password; // never send password hash to client
+  delete userData.password; 
 
   res.status(statusCode).json({
     success: true,
@@ -63,14 +36,13 @@ const sendTokenResponse = (user, statusCode, res) => {
 
 /**
  * POST /api/auth/register
- * Body: { name, email, password }
  */
 export const register = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
 
     // Check if user already exists BEFORE trying to create
-    // (mongoose unique constraint would also catch it, but the error message is ugly)
+    
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(409).json({
@@ -92,7 +64,6 @@ export const register = async (req, res, next) => {
 
 /**
  * POST /api/auth/login
- * Body: { email, password }
  */
 export const login = async (req, res, next) => {
   try {
@@ -109,8 +80,6 @@ export const login = async (req, res, next) => {
     const user = await User.findOne({ email }).select("+password");
 
     if (!user) {
-      // Use the same message for "wrong email" and "wrong password"
-      // Revealing which one is wrong is a security issue (user enumeration)
       return res.status(401).json({
         success: false,
         message: "Invalid email or password",

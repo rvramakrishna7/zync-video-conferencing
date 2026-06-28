@@ -1,12 +1,5 @@
 /**
  * theme.js — Zync's global Material UI theme.
- *
- * WHY export a function instead of a theme object?
- * We need TWO themes — light and dark. getTheme(mode) creates the right
- * one based on what the user toggles. main.jsx calls this dynamically.
- *
- * Design direction: Zinc/White (Vercel-inspired) with light turquoise accent.
- * Clean, minimal, stark — not loud or colourful.
  */
 
 import { createTheme } from "@mui/material/styles";

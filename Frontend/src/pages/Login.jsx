@@ -4,9 +4,6 @@
  * Handles two flows:
  *  1. Email + password login (local auth)
  *  2. "Continue with Google" button (Google OAuth)
- *
- * After login, checks if there's a ?redirect= param in the URL
- * (e.g. /login?redirect=create) and navigates there instead of home.
  */
 
 import { useState } from "react";
@@ -78,10 +75,9 @@ const Login = () => {
   });
 
   // Single handler for all input changes — "computed property name" pattern
-  // e.target.name tells us which field changed (email or password)
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-    if (error) setError(""); // clear error when user starts typing again
+    if (error) setError(""); 
   };
 
   const handleSubmit = async (e) => {
@@ -94,7 +90,6 @@ const Login = () => {
       login(data.token, data.user); // store token + update global auth state
 
       // redirect param contains the original URL they were trying to visit
-      // e.g. /login?redirect=%2Froom%2FABC123 → decode → /room/ABC123
       const redirect = searchParams.get("redirect");
       navigate(redirect ? decodeURIComponent(redirect) : "/");
     } catch (err) {

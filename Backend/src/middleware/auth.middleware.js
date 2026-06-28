@@ -1,22 +1,6 @@
 /**
  * auth.middleware.js — Protects routes that require a logged-in user.
- *
- * ─── What is Middleware? ──────────────────────────────────────────────────────
- *
- * Middleware is a function that runs BETWEEN the request arriving and your
- * route handler running. It has access to (req, res, next).
- *
- * Calling next() = "I'm done, pass control to the next function"
- * Calling res.json() without next() = "I'm ending the request here"
- *
- * Chain visualization:
- *   Request → [CORS middleware] → [JSON parser] → [Auth middleware] → [Route handler]
- *
- * If auth middleware calls res.status(401).json(...), the route handler
- * never runs. That's how we "protect" routes.
- *
- * ─── How Auth Works End-to-End ────────────────────────────────────────────────
- *
+
  *   1. User logs in → server returns JWT
  *   2. Frontend stores JWT (localStorage or memory)
  *   3. Frontend sends JWT in every request header:

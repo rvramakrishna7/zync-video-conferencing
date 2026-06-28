@@ -165,12 +165,9 @@ export const endRoom = async (req, res, next) => {
  * POST /api/rooms/summary
  * Body: { roomCode, chatLog, duration }
  *
- * Takes the meeting's chat transcript and sends it to Claude API.
- * Claude returns a structured summary in bullet points.
+ * Takes the meeting's chat transcript and sends it to Groq API.
+ * Groq returns a structured summary in bullet points.
  *
- * WHY use Claude here instead of GPT or another model?
- * We're already in the Anthropic ecosystem — consistent SDK, billing, and
- * Claude is particularly strong at summarization tasks.
  */
 export const generateSummary = async (req, res, next) => {
   try {

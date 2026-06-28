@@ -1,15 +1,6 @@
 /**
  * User.model.js — Defines the shape of a User document in MongoDB.
- *
  * ─── What is a Mongoose Schema? ──────────────────────────────────────────────
- *
- * MongoDB is "schemaless" — it doesn't enforce structure by default.
- * Mongoose adds a schema layer on top so you can say:
- *   "Every User document MUST have an email (string, required, unique)"
- * This gives you validation, type-safety, and structure at the app level.
- *
- * Schema → defines the shape
- * Model  → the class you use to query/create documents (User.find(), User.create())
  */
 
 import mongoose from "mongoose";
@@ -40,7 +31,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       minlength: [6, "Password must be at least 6 characters"],
       // Not required because Google OAuth users have no password
-      select: false, // NEVER return password in queries by default — security best practice
+      select: false, 
       // To get it: User.findOne({email}).select('+password')
     },
 
@@ -78,12 +69,6 @@ const userSchema = new mongoose.Schema(
     ],
   },
   {
-    /**
-     * timestamps: true automatically adds:
-     *   createdAt — when the document was first created
-     *   updatedAt — when it was last modified
-     * No need to manage these manually.
-     */
     timestamps: true,
   }
 );
@@ -92,19 +77,6 @@ const userSchema = new mongoose.Schema(
 
 /**
  * Pre-save hook: runs BEFORE every .save() call.
- *
- * WHY hash here instead of in the controller?
- * Because no matter how you save a User (controller, seed script, tests),
- * the password always gets hashed. You can't accidentally save plaintext.
- *
- * WHY check isModified('password')?
- * If you update a user's name, .save() runs again — we don't want to
- * re-hash an already-hashed password. isModified returns true only when
- * the password field actually changed.
- *
- * WHY NOT use arrow function here?
- * Arrow functions don't have their own `this`. We need `this` to refer
- * to the document being saved.
  */
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password") || !this.password) return next();

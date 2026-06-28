@@ -1,41 +1,5 @@
 /**
  * signaling.js — The WebRTC Signaling Server
- *
- * ─── What is "signaling" and why do we need it? ───────────────────────────────
- *
- * WebRTC lets two browsers talk DIRECTLY to each other (peer-to-peer).
- * But before that direct connection exists, they need to exchange info:
- *   → "What's your IP address?"
- *   → "What video/audio codecs do you support?"
- *   → "Here's my 'offer' to connect..."
- *   → "Here's my 'answer'..."
- *
- * They can't send this info directly (no connection yet!), so they use
- * our server as a middleman JUST for this setup phase. That's signaling.
- *
- * After the handshake, video/audio flows browser-to-browser — our server
- * is out of the loop. This is what makes WebRTC scalable.
- *
- * ─── The WebRTC Handshake Flow ─────────────────────────────────────────────
- *
- *   User A (Caller)          Our Server            User B (Callee)
- *       │                        │                        │
- *       │── join-room ──────────▶│◀──────── join-room ───│
- *       │                        │                        │
- *       │── offer ──────────────▶│──── offer ────────────▶│
- *       │                        │                        │
- *       │◀─────────────── answer ─│◀─── answer ───────────│
- *       │                        │                        │
- *       │── ice-candidate ───────▶│── ice-candidate ──────▶│
- *       │                        │                        │
- *       │◀══════════ Direct P2P Video/Audio ══════════════│
- *
- * ─── What are ICE candidates? ──────────────────────────────────────────────
- *
- * ICE (Interactive Connectivity Establishment) candidates are possible
- * network paths — like different addresses the browser could use to reach
- * the other peer (local IP, public IP via STUN, relayed via TURN).
- * Both browsers exchange these and pick the best path.
  */
 
 import { Server } from "socket.io";
@@ -58,7 +22,6 @@ export const initSocket = (httpServer) => {
     // ── JOIN ROOM ────────────────────────────────────────────────────────────
     /**
      * Fired when a user enters a meeting room.
-     * We add them to:
      *   1. Socket.IO "room" (a broadcast channel — emit to everyone in a room)
      *   2. Our in-memory roomParticipants map (to track who's here)
      */
@@ -87,9 +50,7 @@ export const initSocket = (httpServer) => {
     // ── WebRTC SIGNALING EVENTS ───────────────────────────────────────────────
 
     /**
-     * OFFER — Caller creates a "session description" describing
-     * what media they want to send (codecs, resolution, etc.)
-     * and sends it to a specific peer (targetSocketId).
+     * OFFER
      */
     socket.on("offer", ({ targetSocketId, offer }) => {
       // Forward the offer only to the specific target, not the whole room
@@ -100,8 +61,7 @@ export const initSocket = (httpServer) => {
     });
 
     /**
-     * ANSWER — Callee responds to the offer with their own session description.
-     * This completes the "negotiation" of media parameters.
+     * ANSWER 
      */
     socket.on("answer", ({ targetSocketId, answer }) => {
       io.to(targetSocketId).emit("answer", {
@@ -111,9 +71,7 @@ export const initSocket = (httpServer) => {
     });
 
     /**
-     * ICE CANDIDATE — Network path candidates discovered by the browser.
-     * Both sides send these as they're discovered (it's async/continuous).
-     * The browsers try each candidate and use the best working path.
+     * ICE CANDIDATE 
      */
     socket.on("ice-candidate", ({ targetSocketId, candidate }) => {
       io.to(targetSocketId).emit("ice-candidate", {
@@ -149,7 +107,6 @@ export const initSocket = (httpServer) => {
 
     /**
      * Fired automatically when a user closes the tab, loses internet, etc.
-     * We clean up their presence from all rooms.
      */
     socket.on("disconnect", () => {
       // Find which room this socket was in and remove them
