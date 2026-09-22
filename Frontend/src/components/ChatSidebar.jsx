@@ -1,5 +1,5 @@
 /**
- * components/ChatSidebar.jsx — Real-time chat panel.
+ * components/ChatSidebar.jsx 
  */
 
 import { useState, useEffect, useRef } from "react";
@@ -18,9 +18,9 @@ import CloseIcon from "@mui/icons-material/Close";
 const ChatSidebar = ({ socket, roomCode, user, onClose, hidden  }) => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
-  const bottomRef = useRef(null); // reference to invisible div at the bottom of messages
+  const bottomRef = useRef(null); 
 
-  // Listen for incoming messages from other participants
+ 
   useEffect(() => {
     if (!socket) return;
 
@@ -33,11 +33,11 @@ const ChatSidebar = ({ socket, roomCode, user, onClose, hidden  }) => {
 
     socket.on("receive-message", handleMessage);
 
-    // Clean up listener when sidebar unmounts
+   
     return () => socket.off("receive-message", handleMessage);
   }, [socket]);
 
-  // Auto-scroll to bottom whenever messages array grows
+ 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -59,10 +59,10 @@ const ChatSidebar = ({ socket, roomCode, user, onClose, hidden  }) => {
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault(); // prevent newline on Enter
+      e.preventDefault(); 
       sendMessage();
     }
-    // Shift+Enter = newline (default textarea behavior, no need to handle)
+   
   };
 
   // Format timestamp: 
@@ -78,7 +78,7 @@ const ChatSidebar = ({ socket, roomCode, user, onClose, hidden  }) => {
       sx={{
         width: 320,
         height: "100%",
-        display: hidden ? "none" : "flex", // hide but stay mounted — listener stays active
+        display: hidden ? "none" : "flex", 
         flexDirection: "column",
         bgcolor: "background.paper",
         borderLeft: "1px solid",

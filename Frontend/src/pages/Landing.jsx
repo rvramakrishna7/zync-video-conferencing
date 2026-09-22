@@ -1,5 +1,5 @@
 /**
- * pages/Landing.jsx — The home page.
+ * pages/Landing.jsx 
  */
 
 import { useState, useEffect } from "react";
@@ -30,9 +30,7 @@ import { useAuth } from "../context/AuthContext";
 import { useThemeToggle } from "../context/ThemeToggleContext";
 import { roomAPI } from "../services/api";
 
-// Defined outside component so it's never recreated on re-render
-// If it's inside, React creates a new array reference every render
-// which breaks the useEffect dependency tracking → loop stops
+
 const PHRASES = [
   "actually sync.",
   "just flow.",
@@ -50,45 +48,40 @@ const Landing = () => {
   const [creating, setCreating] = useState(false);
   const [error, setError] = useState("");
 
-  // ── Typewriter effect ──────────────────────────────────────────────────────
-
-  // Phrases that cycle through the highlighted part of the heading
+  
+  
   const [phraseIndex, setPhraseIndex] = useState(0);
-  const [displayed, setDisplayed] = useState(""); // what's currently visible
-  const [isDeleting, setIsDeleting] = useState(false); // typing forward or erasing
+  const [displayed, setDisplayed] = useState(""); 
+  const [isDeleting, setIsDeleting] = useState(false); 
 
   useEffect(() => {
     const current = PHRASES[phraseIndex];
 
-    // a nested setTimeout — so cleanup always works correctly.
+    // a nested setTimeout 
     const isFullyTyped = !isDeleting && displayed === current;
     const isFullyDeleted = isDeleting && displayed === "";
 
-    // Determine delay: pause longer when phrase is complete
+    // Determine delay
     const delay = isFullyTyped ? 1800 : isDeleting ? 40 : 70;
 
     const timeout = setTimeout(() => {
       if (isFullyDeleted) {
-        // Move to next phrase and start typing it
         setIsDeleting(false);
         setPhraseIndex((prev) => (prev + 1) % PHRASES.length);
       } else if (isFullyTyped) {
-        // Pause is over — start deleting
         setIsDeleting(true);
       } else if (isDeleting) {
-        // Remove one character
         setDisplayed((prev) => prev.slice(0, prev.length - 1));
       } else {
-        // Add one character
         setDisplayed((prev) => current.slice(0, prev.length + 1));
       }
     }, delay);
 
-    // This cleanup now covers ALL cases — no nested setTimeout anywhere
+
     return () => clearTimeout(timeout);
   }, [displayed, isDeleting, phraseIndex]);
 
-  // ── Create a new room ──────────────────────────────────────────────────────
+  // Create a new room 
 
   const handleCreateRoom = async () => {
     if (!isAuthenticated) {
@@ -103,7 +96,7 @@ const Landing = () => {
       const { data } = await roomAPI.create({
         title: `${user.name}'s Meeting`,
       });
-      // Navigate to the room — React Router handles the URL change
+      
       navigate(`/room/${data.room.roomCode}`);
     } catch (err) {
       setError(
@@ -114,7 +107,7 @@ const Landing = () => {
     }
   };
 
-  // ── Join an existing room ──────────────────────────────────────────────────
+  //Join an existing room 
 
   const handleJoinRoom = () => {
     const code = roomCode.trim();
@@ -134,7 +127,7 @@ const Landing = () => {
     <Box
       sx={{
         minHeight: "100vh",
-        // Subtle gradient — gives glass card something to blur against
+      
         background: (theme) =>
           theme.palette.mode === "light"
             ? "linear-gradient(135deg, #f0fdfa 0%, #fafafa 40%, #eff6ff 100%)"
@@ -144,7 +137,7 @@ const Landing = () => {
         transition: "background 0.3s ease",
       }}
     >
-      {/* ── Navbar ────────────────────────────────────────────────────── */}
+      {/* Navbar */}
       <Box
         component="nav"
         sx={{
@@ -254,7 +247,7 @@ const Landing = () => {
         </Stack>
       </Box>
 
-      {/* ── Hero Section ──────────────────────────────────────────────── */}
+      {/* Hero Section*/}
       <Container
         maxWidth="md"
         sx={{
@@ -291,12 +284,12 @@ const Landing = () => {
             lineHeight: 1.1,
             mb: 3,
             letterSpacing: "-0.03em",
-            minHeight: { xs: "4.5rem", md: "3.5rem" }, // reserves space so layout never shifts
+            minHeight: { xs: "4.5rem", md: "3.5rem" }, 
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            flexWrap: { xs: "wrap", sm: "nowrap" }, // forces everything onto one line
-            whiteSpace: { xs: "normal", sm: "nowrap" }, // prevents the typed text from wrapping
+            flexWrap: { xs: "wrap", sm: "nowrap" }, 
+            whiteSpace: { xs: "normal", sm: "nowrap" }, 
           }}
         >
           Video calls that
@@ -307,11 +300,11 @@ const Landing = () => {
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               display: "inline-block",
-              ml: "0.28em", // exactly one space width — no double gap
+              ml: "0.28em", 
             }}
           >
             {displayed}
-            {/* Blinking cursor — a simple pipe character that fades in/out */}
+            {/* Blinking cursor */}
             <Box
               component="span"
               sx={{
@@ -349,16 +342,16 @@ const Landing = () => {
           so you don't have to.
         </Typography>
 
-        {/* ── Action Card ───────────────────────────────────────────────── */}
+        {/* Action Card */}
         <Box
           sx={{
-            // Glass morphism — semi-transparent blur over the gradient background
+            
             background: (theme) =>
               theme.palette.mode === "light"
                 ? "rgba(255,255,255,0.45)"
                 : "rgba(24,24,27,0.6)",
             backdropFilter: "blur(20px)",
-            WebkitBackdropFilter: "blur(20px)", // Safari support
+            WebkitBackdropFilter: "blur(20px)", 
             border: "1px solid",
             borderColor: (theme) =>
               theme.palette.mode === "light"
@@ -459,7 +452,7 @@ const Landing = () => {
           </Stack>
         </Box>
 
-        {/* ── Feature Pills ──────────────────────────────────────────────── */}
+        {/* Feature Pills  */}
         {/* On mobile: vertical stack. On desktop: horizontal row with dividers */}
         <Stack
           direction={{ xs: "column", md: "row" }}

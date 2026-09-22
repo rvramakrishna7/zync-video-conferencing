@@ -1,5 +1,5 @@
 /**
- * components/EmojiReactions.jsx — Floating emoji animations on screen.
+ * components/EmojiReactions.jsx
  */
 
 import { useEffect, useState } from "react";
@@ -12,8 +12,8 @@ const EmojiReactions = ({ socket }) => {
     if (!socket) return;
 
     const handleReaction = ({ emoji, name }) => {
-      const id = Date.now() + Math.random(); // unique id for this reaction
-      const xPos = 10 + Math.random() * 80;  // random horizontal position (10%–90%)
+      const id = Date.now() + Math.random(); 
+      const xPos = 10 + Math.random() * 80;  
 
       setReactions((prev) => [...prev, { id, emoji, name, xPos }]);
 

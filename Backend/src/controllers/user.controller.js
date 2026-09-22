@@ -14,11 +14,11 @@ export const updateProfile = async (req, res, next) => {
   try {
     const { name, avatar } = req.body;
 
-    // findByIdAndUpdate with { new: true } returns the updated document (not the old one)
+    
     const user = await User.findByIdAndUpdate(
       req.user._id,
       { name, avatar },
-      { new: true, runValidators: true } // runValidators re-runs schema validation on update
+      { new: true, runValidators: true }
     );
 
     res.json({ success: true, user });

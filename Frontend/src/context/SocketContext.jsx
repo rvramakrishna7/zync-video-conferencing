@@ -1,5 +1,5 @@
 /**
- * context/SocketContext.jsx — Global Socket.IO connection.
+ * context/SocketContext.jsx
  */
 
 import { createContext, useContext, useEffect, useRef, useState } from "react";
@@ -15,11 +15,11 @@ export const SocketProvider = ({ children }) => {
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    // Socket connection once when the component mounts
+    
     const socket = io(import.meta.env.VITE_SOCKET_URL || "http://localhost:5000", {
       autoConnect: true,
-      reconnectionAttempts: 5,      // try to reconnect 5 times if connection drops
-      reconnectionDelay: 1000,      // wait 1 second between reconnect attempts
+      reconnectionAttempts: 5,      
+      reconnectionDelay: 1000,      
     });
 
     socketRef.current = socket;
@@ -35,12 +35,11 @@ export const SocketProvider = ({ children }) => {
       setIsConnected(false);
     });
 
-    // Cleanup: disconnect when the app unmounts (tab close, etc.)
-    // Without this, socket connections leaks
+   
     return () => {
       socket.disconnect();
     };
-  }, []); // empty array = run once on mount
+  }, []); 
 
   return (
     <SocketContext.Provider value={{ socket: socketRef.current, isConnected }}>

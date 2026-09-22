@@ -1,5 +1,5 @@
 /**
- * App.jsx — The routing layer. Maps URLs to page components.
+ * App.jsx 
  */
 
 import { Routes, Route, Navigate } from "react-router-dom";

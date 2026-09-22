@@ -1,5 +1,5 @@
 /**
- * hooks/useWebRTC.js — Manages all WebRTC peer connections.
+ * hooks/useWebRTC.js 
  */
 
 import { useEffect, useRef, useState, useCallback } from "react";
@@ -18,13 +18,11 @@ const useWebRTC = (socket, roomCode, user) => {
   const [isCamOff, setIsCamOff] = useState(false);
   const [isScreenSharing, setIsScreenSharing] = useState(false);
 
-  // Refs persist across renders without triggering re-renders
   const localStreamRef = useRef(null);
   const peerConnectionsRef = useRef({});
   const screenStreamRef = useRef(null);
 
-  // ── Get camera + mic ──────────────────────────────────────────────────────
-
+  // Get camera + mic 
   const initLocalStream = useCallback(async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -50,7 +48,7 @@ const useWebRTC = (socket, roomCode, user) => {
     }
   }, []);
 
-  // ── Create one peer connection ─────────────────────────────────────────────
+  // Create one peer connection 
 
   const createPeerConnection = useCallback(
     (targetSocketId, targetName) => {
@@ -66,7 +64,7 @@ const useWebRTC = (socket, roomCode, user) => {
         }
       };
 
-      // Remote video/audio arrived — add to peers state so UI renders their tile
+      
       pc.ontrack = (event) => {
         setPeers((prev) => {
           const updated = new Map(prev);
@@ -86,7 +84,7 @@ const useWebRTC = (socket, roomCode, user) => {
         }
       };
 
-      // Share our local tracks with this peer
+      
       if (localStreamRef.current) {
         localStreamRef.current.getTracks().forEach((track) => {
           pc.addTrack(track, localStreamRef.current);
@@ -99,7 +97,7 @@ const useWebRTC = (socket, roomCode, user) => {
     [socket],
   );
 
-  // ── Caller: create and send an offer ──────────────────────────────────────
+  // Caller: create and send an offer 
 
   const callPeer = useCallback(
     async (targetSocketId, targetName) => {
@@ -111,7 +109,7 @@ const useWebRTC = (socket, roomCode, user) => {
     [createPeerConnection, socket],
   );
 
-  // ── Callee: receive offer, send answer ────────────────────────────────────
+  // Callee: receive offer, send answer 
 
   const handleOffer = useCallback(
     async ({ offer, fromSocketId, fromName }) => {
@@ -124,14 +122,14 @@ const useWebRTC = (socket, roomCode, user) => {
     [createPeerConnection, socket],
   );
 
-  // ── Caller: receive answer ────────────────────────────────────────────────
+  // Caller: receive answer 
 
   const handleAnswer = useCallback(async ({ answer, fromSocketId }) => {
     const pc = peerConnectionsRef.current[fromSocketId];
     if (pc) await pc.setRemoteDescription(new RTCSessionDescription(answer));
   }, []);
 
-  // ── Both sides: handle incoming ICE candidates ─────────────────────────────
+  // Both sides: handle incoming ICE candidates 
 
   const handleIceCandidate = useCallback(
     async ({ candidate, fromSocketId }) => {
@@ -147,7 +145,7 @@ const useWebRTC = (socket, roomCode, user) => {
     [],
   );
 
-  // ── Remove a peer (left or disconnected) ──────────────────────────────────
+  // Remove a peer (left or disconnected) 
 
   const removePeer = useCallback((socketId) => {
     peerConnectionsRef.current[socketId]?.close();
@@ -159,9 +157,9 @@ const useWebRTC = (socket, roomCode, user) => {
     });
   }, []);
 
-  // ── Media controls ────────────────────────────────────────────────────────
+  // Media controls 
 
-  // track.enabled = false silences/hides but keeps the connection alive
+  
   const toggleMic = useCallback(() => {
     const track = localStreamRef.current?.getAudioTracks()[0];
     if (track) {
@@ -178,7 +176,7 @@ const useWebRTC = (socket, roomCode, user) => {
     }
   }, []);
 
-  // Screen share: replaces video track in all peer connections
+  
   const toggleScreenShare = useCallback(async () => {
     if (isScreenSharing) {
       const camTrack = localStreamRef.current?.getVideoTracks()[0];
@@ -208,7 +206,7 @@ const useWebRTC = (socket, roomCode, user) => {
     }
   }, [isScreenSharing]);
 
-  // ── Main effect: join room + wire socket events ───────────────────────────
+  // Main effect: join room + wire socket events 
 
   useEffect(() => {
     if (!socket || !roomCode || !user) return;
@@ -224,14 +222,14 @@ const useWebRTC = (socket, roomCode, user) => {
         name: user.name,
       });
 
-      // People already in the room 
+      
       socket.on("room-participants", (participants) => {
         participants.forEach(({ socketId, name }) => {
           if (socketId !== socket.id) callPeer(socketId, name);
         });
       });
 
-      // New person joined after us 
+    
       socket.on("user-joined", ({ socketId, name }) => {
         setPeers((prev) => {
           const updated = new Map(prev);
@@ -251,8 +249,7 @@ const useWebRTC = (socket, roomCode, user) => {
 
     return () => {
       mounted = false;
-      // Only stop tracks and close connections on true unmount
-      // Socket cleanup prevents duplicate listeners on re-run
+      
       socket.off("room-participants");
       socket.off("user-joined");
       socket.off("offer");
@@ -263,14 +260,14 @@ const useWebRTC = (socket, roomCode, user) => {
     
   }, [socket, roomCode, user?._id]);
 
-  // Separate effect — only runs true cleanup when component fully unmounts
+  
     useEffect(() => {
       return () => {
         localStreamRef.current?.getTracks().forEach((t) => t.stop());
         Object.values(peerConnectionsRef.current).forEach((pc) => pc.close());
         peerConnectionsRef.current = {};
       };
-    }, []); // empty array = only on mount/unmount, never in between
+    }, []); 
 
   return {
     localStream,

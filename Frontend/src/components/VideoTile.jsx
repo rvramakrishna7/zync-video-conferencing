@@ -1,5 +1,5 @@
 /**
- * components/VideoTile.jsx — Renders one participant's video.
+ * components/VideoTile.jsx 
  */
 
 import { useEffect, useRef } from "react";
@@ -13,9 +13,7 @@ const VideoTile = ({ stream, name, isMuted = false, isLocal = false, isCamOff = 
   if (videoRef.current && stream) {
     videoRef.current.srcObject = stream;
 
-    // Browsers block autoPlay without an explicit .play() call.
-    // .catch() silences the "interrupted by new load" warning that
-    // fires harmlessly when the component unmounts mid-play.
+    
     videoRef.current.play().catch((err) => {
       console.warn("Video autoplay blocked:", err);
     });

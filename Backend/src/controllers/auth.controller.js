@@ -1,12 +1,12 @@
 /**
- * auth.controller.js — Handles Register, Login, Google OAuth, and token refresh.
+ * auth.controller.js 
  
  */
 
 import jwt from "jsonwebtoken";
 import User from "../models/User.model.js";
 
-// ─── Helper: Generate JWT ─────────────────────────────────────────────────────
+//  Helper: Generate JWT 
 
 const generateToken = (userId) => {
   return jwt.sign({ id: userId }, process.env.JWT_SECRET, {
@@ -14,11 +14,9 @@ const generateToken = (userId) => {
   });
 };
 
-// ─── Helper: Send token response ─────────────────────────────────────────────
+//  Helper: Send token response 
 
-/**
- * Reusable function to send user data + token.
- */
+
 const sendTokenResponse = (user, statusCode, res) => {
   const token = generateToken(user._id);
 
@@ -32,7 +30,7 @@ const sendTokenResponse = (user, statusCode, res) => {
   });
 };
 
-// ─── REGISTER ─────────────────────────────────────────────────────────────────
+//REGISTER 
 
 /**
  * POST /api/auth/register
@@ -41,7 +39,7 @@ export const register = async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
 
-    // Check if user already exists BEFORE trying to create
+  
     
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -51,20 +49,17 @@ export const register = async (req, res, next) => {
       });
     }
 
-    // Create user — bcrypt hashing happens automatically via pre-save hook in model
+    
     const user = await User.create({ name, email, password, authProvider: "local" });
 
     sendTokenResponse(user, 201, res); // 201 = Created
   } catch (error) {
-    next(error); // passes to global error handler in app.js
+    next(error); 
   }
 };
 
-// ─── LOGIN ────────────────────────────────────────────────────────────────────
+// LOGIN 
 
-/**
- * POST /api/auth/login
- */
 export const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -76,7 +71,7 @@ export const login = async (req, res, next) => {
       });
     }
 
-    // .select('+password') overrides the schema's select:false so we get the hash
+    
     const user = await User.findOne({ email }).select("+password");
 
     if (!user) {
@@ -86,7 +81,7 @@ export const login = async (req, res, next) => {
       });
     }
 
-    // Can't login with password if they registered via Google
+    
     if (user.authProvider === "google") {
       return res.status(400).json({
         success: false,
@@ -108,22 +103,8 @@ export const login = async (req, res, next) => {
   }
 };
 
-// ─── GOOGLE OAUTH ─────────────────────────────────────────────────────────────
+// GOOGLE OAUTH
 
-/**
- * POST /api/auth/google
- * Body: { googleId, email, name, avatar }
- *
- * This is called AFTER the frontend completes Google's OAuth flow
- * and gets the user's profile info from Google.
- *
- * Flow:
- *   1. User clicks "Sign in with Google" on frontend
- *   2. Google's popup/redirect gives frontend the user's profile
- *   3. Frontend sends that profile to THIS endpoint
- *   4. We find or create the user in our DB
- *   5. Return our JWT (not Google's token)
- */
 export const googleAuth = async (req, res, next) => {
   try {
     const { googleId, email, name, avatar } = req.body;
@@ -135,12 +116,11 @@ export const googleAuth = async (req, res, next) => {
       });
     }
 
-    // Find existing user by googleId OR email (handles the case where they
-    // previously registered with email/password using the same email)
+    
     let user = await User.findOne({ $or: [{ googleId }, { email }] });
 
     if (user) {
-      // If they previously registered with email/password, link their Google account
+     
       if (!user.googleId) {
         user.googleId = googleId;
         user.authProvider = "google";
@@ -148,14 +128,14 @@ export const googleAuth = async (req, res, next) => {
         await user.save();
       }
     } else {
-      // Brand new user — create their account
+     
       user = await User.create({
         name,
         email,
         avatar,
         googleId,
         authProvider: "google",
-        // No password needed for Google users
+      
       });
     }
 
@@ -165,16 +145,12 @@ export const googleAuth = async (req, res, next) => {
   }
 };
 
-// ─── GET CURRENT USER ─────────────────────────────────────────────────────────
+//  GET CURRENT USER 
 
-/**
- * GET /api/auth/me
- * Protected route — requires JWT in Authorization header.
- * Used by frontend on app load to restore the logged-in session.
- */
+
 export const getMe = async (req, res, next) => {
   try {
-    // req.user is set by the auth middleware (see auth.middleware.js)
+   
     const user = await User.findById(req.user.id);
 
     if (!user) {

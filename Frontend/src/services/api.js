@@ -1,17 +1,15 @@
 /**
- * services/api.js — Centralized API layer.
+ * services/api.js 
  */
 
 import axios from "axios";
 
-// Custom axios instance — all requests go through this
+
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000/api",
 });
 
-/**
- * Request Interceptor — runs before EVERY outgoing request.
- */
+
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("zync_token");
   if (token) {
@@ -20,10 +18,7 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-/**
- * Response Interceptor — runs after EVERY response comes back.
- * Handles session expiry without you needing to check it in every component.
- */
+
 api.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -37,7 +32,7 @@ api.interceptors.response.use(
   }
 );
 
-// ─── Auth API ─────────────────────────────────────────────────────────────────
+//  Auth API 
 
 export const authAPI = {
   register: (data) => api.post("/auth/register", data),
@@ -46,7 +41,7 @@ export const authAPI = {
   getMe: () => api.get("/auth/me"),
 };
 
-// ─── Room API ─────────────────────────────────────────────────────────────────
+// Room API 
 
 export const roomAPI = {
   create: (data) => api.post("/rooms", data),
@@ -55,7 +50,7 @@ export const roomAPI = {
   end: (roomCode) => api.patch(`/rooms/${roomCode}/end`),
 };
 
-// ─── User API ─────────────────────────────────────────────────────────────────
+// User API 
 
 export const userAPI = {
   getUser: (id) => api.get(`/users/${id}`),

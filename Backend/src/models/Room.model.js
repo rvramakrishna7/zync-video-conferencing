@@ -1,18 +1,11 @@
 /**
- * Room.model.js — Defines a meeting room document.
- *
- * A Room is created when someone clicks "Start Meeting".
- * It holds metadata about the call — not the video itself (WebRTC handles that).
+ * Room.model.js
  */
 
 import mongoose from "mongoose";
-import { customAlphabet } from "nanoid"; // compact, URL-friendly unique IDs
+import { customAlphabet } from "nanoid"; 
 
-/**
- * nanoid generates short unique IDs like "K3fN2mP"
- * We use a custom alphabet (no ambiguous chars like 0/O, 1/l/I)
- * Length 10 = 62^10 possible IDs = practically zero collision chance
- */
+
 const generateRoomCode = customAlphabet(
   "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789",
   10
@@ -23,13 +16,13 @@ const roomSchema = new mongoose.Schema(
     roomCode: {
       type: String,
       unique: true,
-      default: () => generateRoomCode(), // auto-generate on creation
+      default: () => generateRoomCode(), 
     },
 
     title: {
       type: String,
       trim: true,
-      default: "Zync Meeting", // default title if not specified
+      default: "Zync Meeting", 
       maxlength: [100, "Title cannot exceed 100 characters"],
     },
 
@@ -39,11 +32,7 @@ const roomSchema = new mongoose.Schema(
       required: [true, "A room must have a host"],
     },
 
-    /**
-     * Participants array — who is/was in this room.
-     * We store both the User reference and their name separately
-     * because guest users (not logged in) won't have a User document.
-     */
+    
     participants: [
       {
         user: {
@@ -51,17 +40,13 @@ const roomSchema = new mongoose.Schema(
           ref: "User",
           default: null, // null for guests
         },
-        name: String, // display name (from profile or what they typed when joining)
+        name: String, 
         joinedAt: { type: Date, default: Date.now },
         leftAt: { type: Date, default: null },
       },
     ],
 
-    /**
-     * isActive controls whether new people can join.
-     * When the host ends the meeting → set to false → room is "closed".
-     * We keep the document (don't delete) because we need it for the AI summary.
-     */
+    
     isActive: {
       type: Boolean,
       default: true,
@@ -77,13 +62,13 @@ const roomSchema = new mongoose.Schema(
       default: null,
     },
 
-    // The AI-generated meeting summary (filled after call ends)
+    
     summary: {
       type: String,
       default: null,
     },
 
-    // Chat transcript stored on the room for AI summarization
+  
     chatLog: [
       {
         sender: String,
@@ -93,7 +78,7 @@ const roomSchema = new mongoose.Schema(
     ],
 
     settings: {
-      allowGuests: { type: Boolean, default: true }, // can non-logged-in users join?
+      allowGuests: { type: Boolean, default: true }, 
       maxParticipants: { type: Number, default: 50 },
     },
   },

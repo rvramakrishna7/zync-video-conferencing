@@ -1,5 +1,5 @@
 /**
- * ThemeToggleContext.jsx — Shares the theme toggle function globally.
+ * ThemeToggleContext.jsx 
  */
 
 import { createContext, useContext } from "react";

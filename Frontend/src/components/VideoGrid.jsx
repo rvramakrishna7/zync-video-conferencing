@@ -1,25 +1,22 @@
 /**
- * components/VideoGrid.jsx — Lays out all video tiles in a responsive grid.
+ * components/VideoGrid.jsx 
  */
 
 import { Box, Grid } from "@mui/material";
 import VideoTile from "./VideoTile";
 
-/**
- * Returns MUI Grid column sizing based on participant count.
- * MUI Grid uses a 12-column system — xs={6} means "take 6 of 12 columns = 50% width"
- */
+
 const getGridCols = (count) => {
   if (count === 1) return 12;
-  if (count === 2) return { xs: 12, sm: 6 };    // mobile: stacked, desktop: side by side
-  if (count <= 4) return { xs: 12, sm: 6 };     // mobile: stacked, desktop: 2x2
-  return { xs: 12, sm: 6, md: 4 };              // mobile: stacked, desktop: 3 col
+  if (count === 2) return { xs: 12, sm: 6 };    
+  if (count <= 4) return { xs: 12, sm: 6 };     
+  return { xs: 12, sm: 6, md: 4 };             
 };
 
 const VideoGrid = ({ localStream, peers, isMuted, isCamOff, localUser }) => {
   const totalCount = 1 + peers.size; // local + all remote peers
   const colSize = getGridCols(totalCount);
-  const peersArray = Array.from(peers.values()); // convert Map to array for .map()
+  const peersArray = Array.from(peers.values()); 
 
   return (
     <Box sx={{ flex: 1, p: 2, overflow: "auto" }}>
@@ -41,7 +38,7 @@ const VideoGrid = ({ localStream, peers, isMuted, isCamOff, localUser }) => {
             <VideoTile
               stream={peer.stream}
               name={peer.name}
-              isMuted={false} // we can't know if remote is muted (no API for it yet)
+              isMuted={false} 
               isCamOff={!peer.stream}
               isLocal={false}
             />

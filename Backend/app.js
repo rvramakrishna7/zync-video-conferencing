@@ -1,11 +1,5 @@
 /**
  * app.js — The entry point of the entire backend.
- *   1. Loading environment variables
- *   2. Creating the Express app
- *   3. Wrapping it in a Node HTTP server (needed for Socket.IO)
- *   4. Connecting to MongoDB
- *   5. Registering all middleware and routes
- *   6. Starting to listen for requests
  */
 
 import "dotenv/config";               // Loads .env variables into process.env 
@@ -27,18 +21,16 @@ const app = express();
 
 const httpServer = createServer(app);
 
-// Attach Socket.IO to the same HTTP server — returns the io instance
+
 const io = initSocket(httpServer);
 
 // ─── Middleware ───────────────────────────────────────────────────────────────
 
-/**
- * CORS (Cross-Origin Resource Sharing)
- */
+
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests with no origin (mobile apps, curl, Postman)
+     
       if (!origin) return callback(null, true);
 
       const allowedOrigins = [
@@ -60,10 +52,10 @@ app.use(
   })
 );
 
-// Parses incoming JSON request bodies — without this, req.body is undefined
+
 app.use(express.json());
 
-// Parses URL-encoded form data (like traditional HTML form submissions)
+
 app.use(express.urlencoded({ extended: true }));
 
 // ─── Routes ───────────────────────────────────────────────────────────────────
@@ -89,10 +81,6 @@ app.use((req, res) => {
 
 // ─── Global Error Handler ─────────────────────────────────────────────────────
 
-/**
- * When any route does: next(error) — it lands here.
- * This prevents unhandled errors from crashing the server.
- */
 app.use((err, req, res, next) => {
   console.error("Unhandled error:", err.stack);
   res.status(err.status || 500).json({

@@ -1,5 +1,5 @@
 /**
- * auth.routes.js — Maps HTTP endpoints to controller functions.
+ * auth.routes.js 
  */
 
 import { Router } from "express";
@@ -13,8 +13,7 @@ router.post("/register", register);
 router.post("/login", login);
 router.post("/google", googleAuth);
 
-// Protected route — protect middleware runs first, then getMe
-// If protect calls next(error), getMe never runs
+
 router.get("/me", protect, getMe);
 
 export default router;

@@ -1,9 +1,6 @@
 /**
  * pages/Login.jsx
- *
- * Handles two flows:
- *  1. Email + password login (local auth)
- *  2. "Continue with Google" button (Google OAuth)
+
  */
 
 import { useState } from "react";
@@ -45,22 +42,21 @@ const Login = () => {
       setGoogleLoading(true);
       setError("");
       try {
-        // Use the access token to fetch the user's profile from Google
+        
         const profileRes = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
           headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
         });
         const profile = await profileRes.json();
 
-        // Send profile to our backend — it finds or creates the user and returns JWT
         const { data } = await authAPI.googleAuth({
-          googleId: profile.sub,   // Google's unique user ID
+          googleId: profile.sub,   
           email: profile.email,
           name: profile.name,
           avatar: profile.picture,
         });
 
         login(data.token, data.user);
-        // Same redirect logic — go back to where they came from
+        
         const redirect = searchParams.get("redirect");
         navigate(redirect ? decodeURIComponent(redirect) : "/");
       } catch (err) {
@@ -74,22 +70,22 @@ const Login = () => {
     },
   });
 
-  // Single handler for all input changes — "computed property name" pattern
+
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     if (error) setError(""); 
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // prevent browser's default form page-reload behavior
+    e.preventDefault(); 
     setLoading(true);
     setError("");
 
     try {
       const { data } = await authAPI.login(form);
-      login(data.token, data.user); // store token + update global auth state
+      login(data.token, data.user); 
 
-      // redirect param contains the original URL they were trying to visit
+    
       const redirect = searchParams.get("redirect");
       navigate(redirect ? decodeURIComponent(redirect) : "/");
     } catch (err) {
@@ -222,7 +218,7 @@ const Login = () => {
                 fullWidth
                 autoComplete="current-password"
                 InputProps={{
-                  // InputProps lets you add elements inside the input field
+                  
                   endAdornment: (
                     <InputAdornment position="end">
                       <IconButton

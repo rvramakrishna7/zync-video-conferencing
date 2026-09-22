@@ -10,9 +10,9 @@ const connectDB = async () => {
   } catch (error) {
     console.error(`❌ MongoDB connection failed: ${error.message}`);
 
-    // process.exit(1) — kills the Node process with error code 1
+    
     process.exit(1);
-    // We exit because there's no point running a server with no database
+    
   }
 };
 

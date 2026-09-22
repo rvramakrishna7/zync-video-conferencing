@@ -15,17 +15,17 @@ import { SocketProvider } from "./context/SocketContext";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { ThemeToggleContext } from "./context/ThemeToggleContext";
 
-// Inter font via @fontsource (self-hosted — no Google Fonts CDN dependency)
+
 import "@fontsource/inter/400.css";
 import "@fontsource/inter/600.css";
 import "@fontsource/inter/700.css";
 import "@fontsource/inter/800.css";
 
-// ThemeWrapper lives outside render() so useState persists correctly
+// ThemeWrapper lives outside render()
 const ThemeWrapper = ({ children }) => {
-  const [mode, setMode] = useState("light"); // light mode loads first
+  const [mode, setMode] = useState("light"); 
 
-  // useMemo so theme object is only recreated when mode changes — not every render
+  
   const theme = useMemo(() => getTheme(mode), [mode]);
 
   const toggleMode = () => setMode((prev) => (prev === "light" ? "dark" : "light"));

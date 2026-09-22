@@ -1,5 +1,5 @@
 /**
- * pages/Room.jsx — The video call page. Orchestrates all sub-components.
+ * pages/Room.jsx 
  */
 
 import { useState, useEffect, useRef } from "react";
@@ -43,16 +43,16 @@ const Room = () => {
   // Track call duration and chat log for AI summary
   const startTimeRef = useRef(Date.now());
   const chatLogRef = useRef([]);
-  const chatOpenRef = useRef(false); // ref so socket listener always has latest value without re-registering
+  const chatOpenRef = useRef(false); 
 
-  // ── Initialize WebRTC — all peer connection logic is in this hook ─────────
+  // Initialize WebRTC 
   const {
     localStream, peers,
     isMuted, isCamOff, isScreenSharing,
     toggleMic, toggleCam, toggleScreenShare,
   } = useWebRTC(socket, roomCode, user);
 
-  // ── Fetch room metadata on mount ──────────────────────────────────────────
+  // Fetch room metadata on mount 
 
   useEffect(() => {
     const fetchRoom = async () => {
@@ -68,12 +68,12 @@ const Room = () => {
     fetchRoom();
   }, [roomCode]);
 
-  // ── Socket listeners for room-level events ────────────────────────────────
+  //  Socket listeners for room-level events 
 
   useEffect(() => {
     if (!socket) return;
 
-    // Track chat messages for AI summary (separate from what ChatSidebar renders)
+    // Track chat messages for AI summary 
     socket.on("receive-message", ({ message, sender, timestamp }) => {
       chatLogRef.current.push(`${sender}: ${message}`);
       if (!chatOpenRef.current) setUnreadCount((c) => c + 1);
@@ -81,7 +81,7 @@ const Room = () => {
     socket.on("hand-raised", ({ name }) => {
       setRaisedHands((prev) => [...prev, name]);
       showToast(`✋ ${name} raised their hand`, "info");
-      // Auto-lower after 30 seconds
+      
       setTimeout(() => {
         setRaisedHands((prev) => prev.filter((n) => n !== name));
       }, 30000);
@@ -98,14 +98,14 @@ const Room = () => {
     };
   }, [socket]);
 
-  // ── Chat open clears unread count , Chat open clears unread count + keeps ref in sync ──
+
 
   useEffect(() => {
-    chatOpenRef.current = chatOpen; //ref updated so socket listener reads latest value
+    chatOpenRef.current = chatOpen; 
     if (chatOpen) setUnreadCount(0);
   }, [chatOpen]);
 
-  // ── Helpers ────────────────────────────────────────────────────────────────
+  // Helpers 
 
   const showToast = (message, severity = "info") => {
     setToast({ open: true, message, severity });
@@ -145,10 +145,10 @@ const Room = () => {
     return Math.floor((Date.now() - startTimeRef.current) / 1000);
   };
 
-  // ── Invite / Share link ────────────────────────────────────────────────────
+  // Invite / Share link 
 
   const handleInvite = async () => {
-    // The full joinable URL — anyone who opens this lands directly in the room
+    // The full joinable URL 
     const joinLink = `${window.location.origin}/room/${roomCode}`;
 
     /**
@@ -170,7 +170,7 @@ const Room = () => {
     }
   };
 
-  // ── Loading / error states ─────────────────────────────────────────────────
+  // Loading / error states
 
   if (loading) {
     return (
@@ -196,7 +196,7 @@ const Room = () => {
   return (
     <Box sx={{ height: "100vh", display: "flex", flexDirection: "column", bgcolor: "background.default", overflow: "hidden" }}>
 
-      {/* ── Top Bar ─────────────────────────────────────────────────────── */}
+      {/* Top Bar */}
       <Box sx={{ px: 3, py: 1.5, display: "flex", alignItems: "center", justifyContent: "space-between", borderBottom: "1px solid", borderColor: "divider" }}>
         <Stack direction="row" sx={{ alignItems: "center" }} spacing={1.5}>
           <Box sx={{ width: 28, height: 28, borderRadius: "8px", background: "linear-gradient(135deg, #7C3AED, #06B6D4)", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -237,7 +237,7 @@ const Room = () => {
                 py: 0.5,
                 gap: 0.5,
                 "&:hover": { bgcolor: "rgba(13,148,136,0.2)" },
-                // Show share icon on mobile, copy icon on desktop
+                
                
               }}
             >
@@ -253,7 +253,7 @@ const Room = () => {
         </Stack>
       </Box>
 
-      {/* ── Main area: Video + Chat ──────────────────────────────────────── */}
+      {/* Main area: Video + Chat */}
       <Box sx={{ flex: 1, display: "flex", overflow: "hidden" }}>
 
         {/* Video grid fills available space */}
@@ -265,7 +265,7 @@ const Room = () => {
           localUser={user}
         />
 
-        {/* Chat sidebar — always mounted so socket listener never misses messages */}
+        {/* Chat sidebaR */}
         <ChatSidebar
           socket={socket}
           roomCode={roomCode}
@@ -275,7 +275,7 @@ const Room = () => {
         />
       </Box>
 
-      {/* ── Controls bar ─────────────────────────────────────────────────── */}
+      {/* Controls bar  */}
       <CallControls
         isMuted={isMuted}
         isCamOff={isCamOff}
@@ -295,10 +295,10 @@ const Room = () => {
         isHost={isHost}
       />
 
-      {/* ── Floating emoji overlay ───────────────────────────────────────── */}
+      {/* Floating emoji overlay  */}
       <EmojiReactions socket={socket} />
 
-      {/* ── AI Summary modal ─────────────────────────────────────────────── */}
+      {/* AI Summary modal */}
       <MeetingSummary
         open={showSummary}
         roomCode={roomCode}
@@ -307,7 +307,7 @@ const Room = () => {
         onClose={handleSummaryClose}
       />
 
-      {/* ── Toast notifications ──────────────────────────────────────────── */}
+      {/* Toast notifications  */}
       <Snackbar
         open={toast.open}
         autoHideDuration={4000}

@@ -1,5 +1,5 @@
 /**
- * pages/Register.jsx — New user sign up.
+ * pages/Register.jsx 
  */
 
 import { useState } from "react";

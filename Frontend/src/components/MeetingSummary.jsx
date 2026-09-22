@@ -1,8 +1,5 @@
 /**
- * components/MeetingSummary.jsx — AI-generated summary shown when call ends.
- *   1. We collect the chat transcript from local state
- *   2. Send it to our backend which calls the Groq API
- *   3. Display the returned summary in this modal
+ * components/MeetingSummary.jsx 
  */
 
 import { useState, useEffect } from "react";

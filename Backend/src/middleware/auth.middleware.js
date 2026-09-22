@@ -1,12 +1,5 @@
 /**
- * auth.middleware.js — Protects routes that require a logged-in user.
-
- *   1. User logs in → server returns JWT
- *   2. Frontend stores JWT (localStorage or memory)
- *   3. Frontend sends JWT in every request header:
- *        Authorization: Bearer eyJhbGciOi...
- *   4. This middleware extracts it, verifies the signature, decodes the userId
- *   5. Attaches user to req.user so the route handler can use it
+ * auth.middleware.js 
  */
 
 import jwt from "jsonwebtoken";
@@ -16,8 +9,7 @@ export const protect = async (req, res, next) => {
   try {
     let token;
 
-    // Extract token from the Authorization header
-    // Format: "Bearer <token>" — we split on space and take the second part
+  
     if (
       req.headers.authorization &&
       req.headers.authorization.startsWith("Bearer ")
@@ -32,17 +24,9 @@ export const protect = async (req, res, next) => {
       });
     }
 
-    /**
-     * jwt.verify(token, secret) does two things:
-     *   1. Verifies the signature (was this token really signed by us?)
-     *   2. Checks expiry (is it still valid?)
-     * If either fails, it throws an error — caught below.
-     *
-     * Returns the decoded payload: { id: "mongoId", iat: 1234, exp: 5678 }
-     */
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // Fetch fresh user data from DB (in case user was deleted or role changed)
+  
     const user = await User.findById(decoded.id);
 
     if (!user) {
@@ -52,11 +36,11 @@ export const protect = async (req, res, next) => {
       });
     }
 
-    // Attach user to the request object — available in all downstream handlers
+  
     req.user = user;
     next();
   } catch (error) {
-    // jwt.verify throws specific errors we can handle gracefully
+    
     if (error.name === "TokenExpiredError") {
       return res.status(401).json({
         success: false,

@@ -1,24 +1,20 @@
 /**
- * controllers/summary.controller.js — Generates AI meeting summary via Groq.
+ * controllers/summary.controller.js
  
  */
 
 import Groq from "groq-sdk";
 import Room from "../models/Room.model.js";
 
-/**
- * Initialize Groq client.
- * Reads GROQ_API_KEY from .env automatically.
- */
+
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 export const generateSummary = async (req, res, next) => {
   try {
-    const { transcript } = req.body; // array of "name: message" strings
-    const { roomCode } = req.params; // from URL: /rooms/:roomCode/summary
+    const { transcript } = req.body; 
+    const { roomCode } = req.params; 
 
-    // Find the room to get its title for the prompt
-    // and to save the summary back after generation
+  
     const room = await Room.findOne({ roomCode });
     if (!room) {
       return res
@@ -26,8 +22,7 @@ export const generateSummary = async (req, res, next) => {
         .json({ success: false, message: "Room not found" });
     }
 
-    // If no chat happened during the meeting, skip the API call entirely
-    // and return a friendly fallback message immediately
+   
     if (!transcript || transcript.length === 0) {
       const fallback = "No chat messages were recorded during this meeting.";
       room.summary = fallback;
@@ -69,18 +64,12 @@ Keep it concise and professional. Skip any section that has nothing to report.`,
       max_tokens: 1024,
     });
 
-    /**
-     * Extract the text from Groq's response.
-     * choices[0].message.content contains the AI's reply.
-     * The fallback string handles the rare case where content is empty.
-     */
+   
     const summary =
       completion.choices[0]?.message?.content ||
       "Summary could not be generated.";
 
-    /**
-     * Persist the summary on the Room document in MongoDB.
-     */
+    
     room.summary = summary;
     await room.save();
 

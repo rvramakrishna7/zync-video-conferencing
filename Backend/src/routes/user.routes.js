@@ -4,7 +4,6 @@ import { getUser, updateProfile } from "../controllers/user.controller.js";
 
 const router = Router();
 
-// All user routes require authentication
 router.use(protect);
 
 router.get("/:id", getUser);

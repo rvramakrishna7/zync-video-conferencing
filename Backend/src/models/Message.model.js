@@ -1,5 +1,5 @@
 /**
- * Message.model.js — Chat messages sent during a meeting.
+ * Message.model.js 
  */
 
 import mongoose from "mongoose";
@@ -10,13 +10,13 @@ const messageSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Room",
       required: true,
-      index: true, // creates a DB index — makes "find all messages for room X" fast
+      index: true, 
     },
 
     sender: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      default: null, // null for guest users
+      default: null, 
     },
 
     senderName: {
@@ -33,11 +33,11 @@ const messageSchema = new mongoose.Schema(
 
     type: {
       type: String,
-      enum: ["text", "system"], // "system" = things like "User joined the call"
+      enum: ["text", "system"], 
       default: "text",
     },
   },
-  { timestamps: true } // createdAt acts as our message timestamp
+  { timestamps: true } 
 );
 
 const Message = mongoose.model("Message", messageSchema);

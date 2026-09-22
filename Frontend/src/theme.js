@@ -1,5 +1,5 @@
 /**
- * theme.js — Zync's global Material UI theme.
+ * theme.js 
  */
 
 import { createTheme } from "@mui/material/styles";
@@ -7,11 +7,9 @@ import { createTheme } from "@mui/material/styles";
 export const getTheme = (mode) =>
   createTheme({
     palette: {
-      mode, // "light" or "dark" — MUI uses this to auto-adjust many defaults
+      mode, 
 
       primary: {
-        // Teal-600 in light (darker = more readable on white)
-        // Teal-400 in dark (lighter = more readable on black)
         main: mode === "light" ? "#0D9488" : "#2DD4BF",
         light: mode === "light" ? "#2DD4BF" : "#5EEAD4",
         dark: mode === "light" ? "#0F766E" : "#0D9488",
